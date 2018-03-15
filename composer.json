@@ -1,0 +1,36 @@
+{
+  "name": "mylgeorge/laravel-modx",
+  "type": "library",
+  "description": "Integrate modX in Laravel",
+  "keywords": ["modX", "laravel", "package"],
+  "license": "MIT",
+  "homepage": "https://github.com/mylgeorge/laravel-modx",
+  "authors": [
+    {
+      "name": "Mylonas Giorgos",
+      "email": "mylgeorge@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.0.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~6.0"
+  },
+  "autoload": {
+    "psr-4": { "Modx\\": "src/Modx" }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Modx\\Providers\\ModxHashServiceProvider",
+        "Modx\\Providers\\ModxServiceProvider"
+      ],
+      "aliases": {
+        "ModxHash": "Modx\\Facades\\ModxHashFacade",
+        "ModxFacade": "Modx\\Facades\\ModxFacade"
+      }
+    }
+  }
+}
