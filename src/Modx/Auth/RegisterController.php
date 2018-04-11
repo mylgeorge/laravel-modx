@@ -2,7 +2,6 @@
 
 namespace Modx\Auth;
 
-
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -67,7 +66,6 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-
         $salt = md5(uniqid(rand(), true));
         $password = ModxHashFacade::make($data['password'], ['salt' => $salt]);
 
@@ -93,36 +91,36 @@ class RegisterController extends Controller
         return $user;
     }
 
-    public function register(Request $request)
-    {
-        $this->request = $request;
-
-        $this->validator($request->all())->validate();
-
-        event(new Registered($user = $this->create($request->all())));
-
-        $user->sendActivateAccountNotification($this->token);
-
-        return $this->registered($request, $user)
-            ?: redirect($this->redirectPath());
-    }
-
-    public function verify($username, $token)
-    {
-        /** @var \App\User $user */
-        $user = User::whereUsername($username)->first();
-        if ($user->active == 1) {
-            return view('auth.register.emailconfirmed', ['user' => $user]);
-        } else if ( $user->canActivateAcount($token)  ) {
-            $user->active = 1;
-        }
-        else{
-            return view('auth.register.emailunconfirmed');
-        }
-
-        if ($user->save()) {
-            $this->guard()->login($user);
-            return view('auth.register.emailconfirmed', ['user' => $user]);
-        }
-    }
+//    public function register(Request $request)
+//    {
+//        $this->request = $request;
+//
+//        $this->validator($request->all())->validate();
+//
+//        event(new Registered($user = $this->create($request->all())));
+//
+//        $user->sendActivateAccountNotification($this->token);
+//
+//        return $this->registered($request, $user)
+//            ?: redirect($this->redirectPath());
+//    }
+//
+//    public function verify($username, $token)
+//    {
+//        /** @var \App\User $user */
+//        $user = User::whereUsername($username)->first();
+//        if ($user->active == 1) {
+//            return view('auth.register.emailconfirmed', ['user' => $user]);
+//        } else if ( $user->canActivateAcount($token)  ) {
+//            $user->active = 1;
+//        }
+//        else{
+//            return view('auth.register.emailunconfirmed');
+//        }
+//
+//        if ($user->save()) {
+//            $this->guard()->login($user);
+//            return view('auth.register.emailconfirmed', ['user' => $user]);
+//        }
+//    }
 }

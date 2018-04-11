@@ -9,8 +9,8 @@
 namespace Modx\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Modx\Models\modUser;
 use Modx\ModxCMS;
+use Modx\Models\modUser;
 use Modx\ModxHasher;
 
 class ModxServiceProvider extends ServiceProvider
@@ -21,11 +21,12 @@ class ModxServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(ModxCMS $singleton)
+    public function boot()
     {
+        if($this->app->runningInConsole() || !config('modx.boot')) return;
 
-        if($this->app->runningInConsole()) return;
-        
+        $singleton = $this->app->make(ModxCMS::class);
+
         global $modx;
 
         $singleton->initialize('web');
@@ -47,16 +48,14 @@ class ModxServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
         $this->registerConfig();
 
         $this->app['auth']->provider('modx_user_provider', function($app, array $config) {
             return new ModxUserProvider(new ModxHasher, modUser::class);
         });
-        
 
         $this->app->singleton(ModxCMS::class, function ($app) {
-            return new ModxCMS;
+                return new ModxCMS;
         });
     }
 
@@ -74,6 +73,5 @@ class ModxServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(realpath(__DIR__.'/../../../config/modx.php'), 'modx');
         $this->publishes([realpath(__DIR__.'/../../../config/modx.php') => config_path('modx.php')]);
-
     }
 }
